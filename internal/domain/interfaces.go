@@ -66,4 +66,5 @@ type BlogService interface {
 	DeleteMedia(ctx context.Context, id string) error
 
 	ListAuditLogs(ctx context.Context, limit int) ([]AuditLog, error)
+	AppendAuditLog(ctx context.Context, input AuditLog) error
 }

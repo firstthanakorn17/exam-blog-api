@@ -57,4 +57,5 @@ func RegisterRoutes(app *fiber.App, h *Handler) {
 	v1.Post("/media", h.CreateMedia)
 	v1.Delete("/media/:id", h.DeleteMedia)
 	v1.Get("/audit-logs", h.ListAuditLogs)
+	v1.Post("/audit-logs", h.CreateAuditLog)
 }

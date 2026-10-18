@@ -167,3 +167,14 @@ func (h *Handler) ListAuditLogs(c *fiber.Ctx) error {
 	}
 	return c.JSON(fiber.Map{"auditLogs": logs})
 }
+
+func (h *Handler) CreateAuditLog(c *fiber.Ctx) error {
+	var input domain.AuditLog
+	if err := c.BodyParser(&input); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "invalid request body"})
+	}
+	if err := h.svc.AppendAuditLog(c.UserContext(), input); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"ok": true})
+}

@@ -344,6 +344,16 @@ func (s *blogService) ListAuditLogs(ctx context.Context, limit int) ([]domain.Au
 	return s.repo.ListAuditLogs(ctx, limit)
 }
 
+func (s *blogService) AppendAuditLog(ctx context.Context, input domain.AuditLog) error {
+	if input.ID == "" {
+		input.ID = fmt.Sprintf("log-%d", time.Now().UnixNano())
+	}
+	if input.Timestamp == "" {
+		input.Timestamp = time.Now().UTC().Format(time.RFC3339)
+	}
+	return s.repo.AppendAuditLog(ctx, input)
+}
+
 var nonSlugRegex = regexp.MustCompile(`[^a-z0-9ก-๙\-/]+`)
 
 func slugify(text string) string {
