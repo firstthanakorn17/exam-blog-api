@@ -9,10 +9,15 @@ import (
 )
 
 func (h *Handler) HealthCheck(c *fiber.Ctx) error {
+	infra := map[string]string{}
+	if h.healthPing != nil {
+		infra = h.healthPing(c.UserContext())
+	}
 	return c.JSON(fiber.Map{
 		"status":    "ok",
 		"service":   "exam-blog-api",
 		"framework": "gofiber/v2",
+		"infra":     infra,
 		"timestamp": time.Now().UTC().Format(time.RFC3339),
 	})
 }

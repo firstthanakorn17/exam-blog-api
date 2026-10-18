@@ -1,16 +1,24 @@
 package handler
 
 import (
+	"context"
+
 	"github.com/firstthanakorn17/exam-blog-api/internal/domain"
 	"github.com/gofiber/fiber/v2"
 )
 
+type HealthPinger func(ctx context.Context) map[string]string
+
 type Handler struct {
-	svc domain.BlogService
+	svc        domain.BlogService
+	healthPing HealthPinger
 }
 
-func NewHandler(svc domain.BlogService) *Handler {
-	return &Handler{svc: svc}
+func NewHandler(svc domain.BlogService, healthPing HealthPinger) *Handler {
+	return &Handler{
+		svc:        svc,
+		healthPing: healthPing,
+	}
 }
 
 func RegisterRoutes(app *fiber.App, h *Handler) {
