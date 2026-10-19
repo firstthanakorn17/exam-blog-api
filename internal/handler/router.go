@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/firstthanakorn17/exam-blog-api/internal/domain"
+	"github.com/firstthanakorn17/exam-blog-api/internal/scraper"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -11,12 +12,14 @@ type HealthPinger func(ctx context.Context) map[string]string
 
 type Handler struct {
 	svc        domain.BlogService
+	scraperSvc *scraper.Service
 	healthPing HealthPinger
 }
 
-func NewHandler(svc domain.BlogService, healthPing HealthPinger) *Handler {
+func NewHandler(svc domain.BlogService, scraperSvc *scraper.Service, healthPing HealthPinger) *Handler {
 	return &Handler{
 		svc:        svc,
+		scraperSvc: scraperSvc,
 		healthPing: healthPing,
 	}
 }
@@ -58,4 +61,14 @@ func RegisterRoutes(app *fiber.App, h *Handler) {
 	v1.Delete("/media/:id", h.DeleteMedia)
 	v1.Get("/audit-logs", h.ListAuditLogs)
 	v1.Post("/audit-logs", h.CreateAuditLog)
+
+	// Facebook Exam Scraper Radar REST API
+	v1.Get("/scraper/sources", h.ListScrapeSources)
+	v1.Post("/scraper/sources", h.CreateScrapeSource)
+	v1.Delete("/scraper/sources/:id", h.DeleteScrapeSource)
+	v1.Get("/scraper/items", h.ListScrapedItems)
+	v1.Post("/scraper/run", h.RunScraperNow)
+	v1.Post("/scraper/webhook", h.IngestScraperWebhook)
+	v1.Post("/scraper/items/:id/approve", h.ApproveScrapedItem)
+	v1.Post("/scraper/items/:id/reject", h.RejectScrapedItem)
 }

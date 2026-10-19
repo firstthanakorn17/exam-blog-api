@@ -14,6 +14,7 @@ import (
 	"github.com/firstthanakorn17/exam-blog-api/internal/handler"
 	"github.com/firstthanakorn17/exam-blog-api/internal/middleware"
 	"github.com/firstthanakorn17/exam-blog-api/internal/repository"
+	"github.com/firstthanakorn17/exam-blog-api/internal/scraper"
 	"github.com/firstthanakorn17/exam-blog-api/internal/service"
 	"github.com/firstthanakorn17/exam-blog-api/internal/webhook"
 	"github.com/gofiber/fiber/v2"
@@ -53,8 +54,9 @@ func main() {
 
 	notifier := webhook.NewNotifier(cfg.ReaderWebhookURL, cfg.WebhookSecret)
 	svc := service.NewBlogService(cachedRepo, notifier)
+	scraperSvc := scraper.NewService(svc)
 
-	h := handler.NewHandler(svc, func(pingCtx context.Context) map[string]string {
+	h := handler.NewHandler(svc, scraperSvc, func(pingCtx context.Context) map[string]string {
 		dbStatus := "fallback:json"
 		if pgRepo != nil {
 			if err := pgRepo.Ping(pingCtx); err == nil {

@@ -85,12 +85,58 @@ type DatabaseStore struct {
 }
 
 type DashboardStats struct {
-	TotalPosts     int `json:"totalPosts"`
-	PublishedPosts int `json:"publishedPosts"`
-	DraftPosts     int `json:"draftPosts"`
-	ArchivedPosts  int `json:"archivedPosts"`
-	TotalViews     int `json:"totalViews"`
-	TotalClaps     int `json:"totalClaps"`
-	TotalComments  int `json:"totalComments"`
+	TotalPosts      int `json:"totalPosts"`
+	PublishedPosts  int `json:"publishedPosts"`
+	DraftPosts      int `json:"draftPosts"`
+	ArchivedPosts   int `json:"archivedPosts"`
+	TotalViews      int `json:"totalViews"`
+	TotalClaps      int `json:"totalClaps"`
+	TotalComments   int `json:"totalComments"`
 	TotalCategories int `json:"totalCategories"`
+}
+
+// --- Facebook Exam Scraper Models ---
+
+type ScrapeSource struct {
+	ID              string `json:"id"`
+	Name            string `json:"name"`
+	PageURL         string `json:"pageUrl"`
+	CategorySlug    string `json:"categorySlug"`
+	IncludeKeywords string `json:"includeKeywords"`
+	ExcludeKeywords string `json:"excludeKeywords"`
+	Enabled         bool   `json:"enabled"`
+	LastScrapedAt   string `json:"lastScrapedAt"`
+}
+
+type ExamMeta struct {
+	Organization      string `json:"organization"`
+	Positions         string `json:"positions"`
+	EducationLevel    string `json:"educationLevel"`
+	SalaryRange       string `json:"salaryRange"`
+	ApplyPeriod       string `json:"applyPeriod"`
+	ApplicationStatus string `json:"applicationStatus"` // "open" | "upcoming" | "closed"
+	OfficialLink      string `json:"officialLink"`
+}
+
+type ScrapedItem struct {
+	ID                    string   `json:"id"`
+	SourceID              string   `json:"sourceId"`
+	SourceName            string   `json:"sourceName"`
+	FBPostID              string   `json:"fbPostId"`
+	FBPostURL             string   `json:"fbPostUrl"`
+	RawText               string   `json:"rawText"`
+	ImageURL              string   `json:"imageUrl,omitempty"`
+	PostedAt              string   `json:"postedAt"`
+	ScrapedAt             string   `json:"scrapedAt"`
+	Status                string   `json:"status"` // "pending" | "approved" | "rejected" | "filtered_spam"
+	FilterReason          string   `json:"filterReason"`
+	MatchedKeywords       []string `json:"matchedKeywords"`
+	ConfidenceScore       int      `json:"confidenceScore"`
+	ExamMeta              ExamMeta `json:"examMeta"`
+	GeneratedTitle        string   `json:"generatedTitle"`
+	GeneratedSlug         string   `json:"generatedSlug"`
+	GeneratedExcerpt      string   `json:"generatedExcerpt"`
+	GeneratedContent      string   `json:"generatedContent"`
+	GeneratedFocusKeyword string   `json:"generatedFocusKeyword"`
+	PublishedPostID       string   `json:"publishedPostId,omitempty"`
 }
