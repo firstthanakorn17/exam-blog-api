@@ -5,3 +5,4 @@ tmp/
 *.test
 *.out
 .DS_Store
+*.local.md
